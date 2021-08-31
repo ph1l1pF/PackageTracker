@@ -6,7 +6,7 @@ namespace PackageTracker.Services
 {
     public interface IPackageService
     {
-        void StorePackage(DhlPayload dhlPayload, string trackingNo);
+        Package StorePackage(string trackingNo, string productDescription);
         IEnumerable<Package> GetPackages(string packageTrackingNo);
     }
 }

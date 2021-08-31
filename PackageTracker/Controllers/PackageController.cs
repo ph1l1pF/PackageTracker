@@ -15,33 +15,21 @@ namespace PackageTracker.Controllers
     public class PackageController
     {
 
-        private readonly IHttpClientFactory _clientFactory;
         private readonly IPackageService _packageService;
 
-        public PackageController(IHttpClientFactory clientFactory, IPackageService packageService)
+        public PackageController(IPackageService packageService)
         {
-            _clientFactory = clientFactory;
             _packageService = packageService;
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DhlPayload))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(string packageTrackingNo)
+        public IActionResult Post(string packageTrackingNo, string productDescription)
         {
-            var request = new HttpRequestMessage(
-                            HttpMethod.Get,
-                            $"https://api-eu.dhl.com/track/shipments?trackingNumber={packageTrackingNo}");
-            request.Headers.Add("DHL-API-Key", Environment.GetEnvironmentVariable("DHL-API-Key"));
-            var client = _clientFactory.CreateClient();
-            var response = client.SendAsync(request);
-            if (response.Result.IsSuccessStatusCode)
-            {
-                var jsonString = response.Result.Content.ReadAsStringAsync().Result;
-                var payload = JsonConvert.DeserializeObject<DhlPayload>(jsonString);
-                _packageService.StorePackage(payload, packageTrackingNo);
-                return new OkObjectResult(payload);   
-            }
+            var package = _packageService.StorePackage(packageTrackingNo, productDescription);
+            if(package != null)
+                return new OkObjectResult(package);
             return new BadRequestResult();
         }
 

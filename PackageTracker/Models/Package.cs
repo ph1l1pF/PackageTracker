@@ -13,5 +13,6 @@ namespace PackageTracker.Models
         public string Status { get; set;}
         public DateTime Timestamp {get; set;}
         public string DeliveryCompany { get; set; }
+        public string ProductDescription { get; set; }
     }
 }
