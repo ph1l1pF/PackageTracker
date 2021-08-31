@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using Newtonsoft.Json;
 using PackageTracker.Models;
 
@@ -10,6 +11,8 @@ namespace PackageTracker.Services
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IHttpClientFactory _clientFactory;
+        private Timer _timer;
+
 
 
         public PackageService(IPackageRepository packageRepository, IHttpClientFactory clientFactory)
@@ -23,7 +26,31 @@ namespace PackageTracker.Services
             return _packageRepository.GetPackages(packageTrackingNo);
         }
 
+        public void StartUpdatingPackages()
+        {
+            _timer = new Timer(UpdateAllPackages, null, 0, 1000000);
+        }
+
+        private void UpdateAllPackages(Object o)
+        {
+            var packages = _packageRepository.GetAllPackages();
+            foreach(var package in packages)
+            {
+                StorePackage(package.TrackingNo, package.ProductDescription);
+            }
+        }
+
         public Package StorePackage(string trackingNo, string productDescription) 
+        {
+            var package = RequestPackage(trackingNo, productDescription);
+            if(package != null) {
+                _packageRepository.StorePackages(new List<Package>{package});                
+                return package;
+            }
+            return null;
+        }
+
+        private Package RequestPackage(string trackingNo, string productDescription)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://api-eu.dhl.com/track/shipments?trackingNumber={trackingNo}");
             request.Headers.Add("DHL-API-Key", Environment.GetEnvironmentVariable("DHL-API-Key"));
@@ -41,7 +68,6 @@ namespace PackageTracker.Services
                     Timestamp = lastEvent.Timestamp,
                     ProductDescription = productDescription
                 };
-                _packageRepository.StorePackages(new List<Package>{package});                
                 return package; 
             }
             return null;

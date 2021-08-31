@@ -22,9 +22,25 @@ namespace PackageTracker.Services
         }
         public IEnumerable<Package> GetPackages(string trackingNo)
         {
-            try {
+            try
+            {
                 return _packages.Find(s => s.TrackingNo == trackingNo).ToList();
-            } catch(MongoException e) {
+            }
+            catch (MongoException e)
+            {
+                _logger.LogError(e, e.Message);
+                return new List<Package>();
+            }
+        }
+
+        public IEnumerable<Package> GetAllPackages()
+        {
+            try
+            {
+                return _packages.Find(s => true).ToList();
+            }
+            catch (MongoException e)
+            {
                 _logger.LogError(e, e.Message);
                 return new List<Package>();
             }
@@ -32,9 +48,12 @@ namespace PackageTracker.Services
 
         public void StorePackages(IEnumerable<Package> packages)
         {
-            try {
+            try
+            {
                 _packages.InsertMany(packages);
-            } catch(MongoException e) {
+            }
+            catch (MongoException e)
+            {
                 _logger.LogError(e, e.Message);
             }
         }

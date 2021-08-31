@@ -8,5 +8,6 @@ namespace PackageTracker.Services
     {
         Package StorePackage(string trackingNo, string productDescription);
         IEnumerable<Package> GetPackages(string packageTrackingNo);
+        void StartUpdatingPackages();
     }
 }

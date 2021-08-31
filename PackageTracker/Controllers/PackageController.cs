@@ -41,5 +41,13 @@ namespace PackageTracker.Controllers
             return new OkObjectResult(_packageService.GetPackages(packageTrackingNo));
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("StartUpdating")]
+        public IActionResult StartUpdating() 
+        {
+            _packageService.StartUpdatingPackages();
+            return new OkObjectResult(null);
+        }
     }
 }
