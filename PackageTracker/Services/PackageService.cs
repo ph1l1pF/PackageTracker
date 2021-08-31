@@ -11,14 +11,16 @@ namespace PackageTracker.Services
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IHttpClientFactory _clientFactory;
+        private readonly ISmsService _smsService;
         private Timer _timer;
 
 
 
-        public PackageService(IPackageRepository packageRepository, IHttpClientFactory clientFactory)
+        public PackageService(IPackageRepository packageRepository, IHttpClientFactory clientFactory, ISmsService smsService)
         {
             _packageRepository = packageRepository;
             _clientFactory = clientFactory;
+            _smsService = smsService;
         }
 
         public IEnumerable<Package> GetPackages(string packageTrackingNo)
@@ -44,7 +46,7 @@ namespace PackageTracker.Services
         {
             var package = RequestPackage(trackingNo, productDescription);
             if(package != null) {
-                _packageRepository.StorePackages(new List<Package>{package});                
+                _packageRepository.StorePackages(new List<Package>{package});     
                 return package;
             }
             return null;

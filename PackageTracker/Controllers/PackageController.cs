@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using PackageTracker.Models;
+﻿using PackageTracker.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using PackageTracker.Services;
 
 namespace PackageTracker.Controllers
@@ -28,8 +24,8 @@ namespace PackageTracker.Controllers
         public IActionResult Post(string packageTrackingNo, string productDescription)
         {
             var package = _packageService.StorePackage(packageTrackingNo, productDescription);
-            if(package != null)
-                return new OkObjectResult(package);
+
+            if(package != null) return new OkObjectResult(package);
             return new BadRequestResult();
         }
 
@@ -41,7 +37,7 @@ namespace PackageTracker.Controllers
             return new OkObjectResult(_packageService.GetPackages(packageTrackingNo));
         }
 
-        [HttpPost]
+        [HttpPatch]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("StartUpdating")]
         public IActionResult StartUpdating() 

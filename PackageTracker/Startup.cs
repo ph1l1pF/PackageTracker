@@ -33,6 +33,7 @@ namespace PackageTracker
 
             services.AddScoped<IPackageService, PackageService>();
             services.AddScoped<IPackageRepository, PackageRepository>();
+            services.AddScoped<ISmsService, SmsService>();
 
             services.AddHttpClient();
             services.AddCors(options =>
