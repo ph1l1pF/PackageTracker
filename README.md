@@ -24,7 +24,7 @@ http://localhost:5000/package?packageTrackingNo=<trackingNo>&productDescription=
 Example:
 
 ```url
-http://localhost:5000/package?packageTrackingNo=00340434329907888758&productDescription=Ladekabel
+http://localhost:5000/package?packageTrackingNo=00329907888758&productDescription=shoes
 ```
 
 The server stores your new package and returns it.
