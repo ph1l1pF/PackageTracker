@@ -50,7 +50,23 @@ namespace PackageTracker.Services
         {
             try
             {
-                _packages.InsertMany(packages);
+                var existingPackages = new List<Package>();
+                foreach(var package in packages)
+                {
+                    existingPackages.AddRange(_packages.Find(p => p.TrackingNo == package.TrackingNo).ToEnumerable());
+                }
+
+                foreach( var existingPackage in existingPackages)
+                {
+                    var filter = Builders<Package>.Filter.Eq("TrackingNo", existingPackage.TrackingNo);
+                    var updatedPackage = packages.FirstOrDefault(p => p.TrackingNo == existingPackage.TrackingNo);
+                    var update = Builders<Package>.Update.Set("Status", updatedPackage.Status);
+                    // update = Builders<Package>.Update.AddToSet("Timestamp", updatedPackage.Timestamp);
+                    _packages.UpdateOne(filter, update);
+                }
+
+                var newPackages = packages.Where(p => !existingPackages.Select(ep => ep.TrackingNo).Contains(p.TrackingNo));
+                if(newPackages.Any()) _packages.InsertMany(newPackages);
             }
             catch (MongoException e)
             {
