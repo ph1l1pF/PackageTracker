@@ -19,7 +19,7 @@ namespace PackageTracker.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DhlPayload))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Package))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post(string packageTrackingNo, string productDescription)
         {
@@ -38,7 +38,7 @@ namespace PackageTracker.Controllers
         }
 
         [HttpPatch]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("StartUpdating")]
         public IActionResult StartUpdating() 
         {
