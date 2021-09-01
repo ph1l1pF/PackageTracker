@@ -11,6 +11,7 @@ namespace PackageTracker.Models
         public string Id { get; set; }
         public string TrackingNo { get; set; }
         public string Status { get; set;}
+        public string StatusCode { get; set;}
         public DateTime Timestamp {get; set;}
         public string DeliveryCompany { get; set; }
         public string ProductDescription { get; set; }

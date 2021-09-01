@@ -71,6 +71,7 @@ namespace PackageTracker.Services
                     {
                         TrackingNo = trackingNo,
                         Status = lastEvent.Status,
+                        StatusCode = lastEvent.StatusCode,
                         DeliveryCompany = "DHL",
                         Timestamp = lastEvent.Timestamp,
                         ProductDescription = productDescription
@@ -78,7 +79,6 @@ namespace PackageTracker.Services
                     return package;
                 }
             }
-
             return null;
         }
     }
